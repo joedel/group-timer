@@ -4,7 +4,9 @@ var express = require('express'),
 	path = require('path'),
 	app = express(),
 	server = http.createServer(app),
-	io = require('socket.io').listen(server);
+	io = require('socket.io').listen(server),
+	Timer = require('./timer.js').Timer,
+	timer = new Timer();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -30,12 +32,22 @@ server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+setInterval(function() {
+	if (timer.timer > 0) {
+		timer.countdown();	
+	}
+}, 1000);
 
 io.sockets.on('connection', function(socket) {
 
-	socket.emit('currentTimer', {time: 0 });
+	socket.emit('currentTimer', {time: timer.timer });
 	
 	socket.on('setTimer', function(data) {
-		console.log(data);
+		timer.setTimer(data.time);
+		socket.broadcast.emit('currentTimer', {time: timer.timer });
 	});
+
+	setInterval(function() {
+		socket.emit('isAccurate', {time: timer.timer});
+	},3000);
 });
