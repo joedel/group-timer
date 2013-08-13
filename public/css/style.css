@@ -1,15 +1,22 @@
 body {
   padding: 10px;
   font: 100px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: url(/img/tweed.png);
 }
 
 #timer {
+	margin: 0 auto;
+	max-width: 768px;
+	color: #FFFFFF;
 	text-align: center;
 	padding: 10px;
 	background: #046380;
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
+	-webkit-box-shadow: 1px 1px 6px 0px #141414;
+	-moz-box-shadow: 1px 1px 6px 0px #141414;
+	box-shadow: 1px 1px 6px 0px #141414;
 }
 
 #options {
@@ -34,7 +41,7 @@ body {
 	font-family:arial;
 	font-size:50px;
 	font-weight:bold;
-	padding:23px 40px;
+	padding:23px 23px;
 	text-decoration:none;
 	text-shadow:1px 1px 0px #aade7c;
 }.time:hover {
