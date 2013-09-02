@@ -16,7 +16,7 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.cookieParser('rcjn2j1jdxzn96o5ofjwe'));
+app.use(express.cookieParser('itsabigsecret'));
 app.use(express.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -34,7 +34,7 @@ server.listen(app.get('port'), function(){
 
 setInterval(function() {
 	if (timer.timer > 0) {
-		timer.countdown();	
+		timer.countdown();
 	}
 }, 1000);
 
@@ -46,8 +46,4 @@ io.sockets.on('connection', function(socket) {
 		timer.setTimer(data.time);
 		socket.broadcast.emit('currentTimer', {time: timer.timer });
 	});
-
-	setInterval(function() {
-		socket.emit('isAccurate', {time: timer.timer});
-	},3000);
 });

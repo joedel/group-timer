@@ -44,3 +44,31 @@
 	exports.Timer = Timer;
 
 })(typeof exports === 'undefined' ? this : exports);
+
+;(function() {
+
+	var timer = new Timer();
+
+	var socket = io.connect('http://localhost:3000');
+	
+	socket.on('currentTimer', function (data) {
+		timer.timer = data.time;
+	});
+
+	$(function() {
+		$('.time').on('click', function(e) {
+			e.stopPropagation();
+			var time = $(this).text() * 60 * 1000;
+			timer.setTimer(time);
+			socket.emit('setTimer', { time: time });
+		});
+	});
+
+	setInterval(function() {
+		if (timer.timer > 0) {
+			timer.countdown();
+			$('#timer').text(timer.format());
+		}
+	},1000);
+	
+})();

@@ -19,60 +19,6 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="/js/timer.js"></script>
-	<script>
-		;(function() {
 
-			var timer = new Timer();
-
-			var socket = io.connect('http://localhost:3000');
-			
-			socket.on('currentTimer', function (data) {
-				timer.timer = data.time;
-			});
-
-			socket.on('isAccurate', function(data) {
-				if (Math.abs(timer.timer - data.time) > 2100) {
-					timer.timer = data.time;
-				}
-			})
-
-			$(function() {
-				$('.time').on('click', function(e) {
-					e.stopPropagation();
-					var time = $(this).text() * 60 * 1000;
-					timer.setTimer(time);
-					socket.emit('setTimer', { time: time });
-				});
-			});
-
-			setInterval(function() {
-				if (timer.timer > 0) {
-					timer.countdown();
-					$('#timer').text(timer.format());
-				}
-
-			},1000);
-
-			(function($){
-				/**
-				* @author Alexander Manzyuk <admsev@gmail.com>
- 				* Copyright (c) 2012 Alexander Manzyuk - released under MIT License
- 				* https://github.com/admsev/jquery-play-sound
-				**/
-
-				// 	if (timer.timer === 0) {
-				// 		$.playSound('./sound/door_entry.mp3');
-				// 	}
-
-	  			$.extend({
-	 				playSound: function(){
-	      				return $("<embed src='"+arguments[0]+"' hidden='true' autostart='true' loop='false' class='playSound'>").appendTo('body');
-	    			}
-	  			});
-
-			})(jQuery);
-
-		})();
-	</script>
   </body>
 </html>
