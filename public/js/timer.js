@@ -1,19 +1,23 @@
 ;(function(exports) {
 
 	function Timer() {
-		this.timer = 0;
+		this.endTime = new Date().getTime();
 	}
 
 	Timer.prototype = {
 
-		setTimer: function(time) {
-			this.timer = time;
+		setEndTime: function(time) {
+			this.endTime = new Date().getTime() + time;
 		},
-		countdown: function() {
-			this.timer -= 1000;
+		setEndTimeFromServer: function(time) {
+			this.endTime = time;
+			this.timeRemaining();
+		},
+		timeRemaining: function() {
+			this.timeLeft = this.endTime - new Date().getTime();
 		},
 		format: function() {
-			var time = this.timer,
+			var time = this.timeLeft,
 				seconds = Math.floor((time / 1000) % 60),
 				minutes = Math.floor((time / (1000 * 60)) % 60),
 				hours = Math.floor((time / (1000 * 60 * 60)) % 24);
@@ -47,28 +51,29 @@
 
 ;(function() {
 
-	var timer = new Timer();
-
-	var socket = io.connect('http://localhost:3000');
+	var timer = new Timer(),
+		socket = io.connect('http://localhost:3000');
 	
-	socket.on('currentTimer', function (data) {
-		timer.timer = data.time;
+	socket.on('currentEndTime', function (data) {
+		//this is the full date time in ms.
+		timer.setEndTimeFromServer(data.time);
 	});
 
 	$(function() {
 		$('.time').on('click', function(e) {
 			e.stopPropagation();
 			var time = $(this).text() * 60 * 1000;
-			timer.setTimer(time);
+			timer.setEndTime(time);
+			timer.timeRemaining();
 			socket.emit('setTimer', { time: time });
 		});
 	});
 
 	setInterval(function() {
-		if (timer.timer > 0) {
-			timer.countdown();
+		if (timer.timeLeft > 0) {
+			timer.timeRemaining();
 			$('#timer').text(timer.format());
 		}
-	},1000);
-	
+	},100);
+
 })();

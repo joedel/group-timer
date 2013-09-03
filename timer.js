@@ -1,19 +1,16 @@
 ;(function(exports) {
 
 	function Timer() {
-		this.timer = 0;
+		this.endTime = 0;
 	}
 
 	Timer.prototype = {
 
-		setTimer: function(time) {
-			this.timer = time;
+		setEndTime: function(time) {
+			this.endTime = new Date().getTime() + time;
 		},
-		countdown: function() {
-			this.timer -= 1000;
-		},
-		format: function() {
-
+		getEndTime: function() {
+			return this.endTime;
 		}
 	};
 

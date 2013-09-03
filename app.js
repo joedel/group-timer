@@ -32,18 +32,12 @@ server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-setInterval(function() {
-	if (timer.timer > 0) {
-		timer.countdown();
-	}
-}, 1000);
-
 io.sockets.on('connection', function(socket) {
 
-	socket.emit('currentTimer', {time: timer.timer });
+	socket.emit('currentEndTime', {time: timer.getEndTime() });
 	
 	socket.on('setTimer', function(data) {
-		timer.setTimer(data.time);
-		socket.broadcast.emit('currentTimer', {time: timer.timer });
+		timer.setEndTime(data.time);
+		socket.broadcast.emit('currentEndTime', {time: timer.getEndTime() });
 	});
 });
